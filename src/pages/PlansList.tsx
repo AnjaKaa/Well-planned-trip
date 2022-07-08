@@ -1,12 +1,20 @@
-import * as React from 'react';
+import React from 'react';
 
+import { useSelector } from 'react-redux';
+import { IRootState } from '../store';
+import { IPlan } from '../types/planTypes';
 export interface IPlansListProps {
 }
 
 export function PlansList(props: IPlansListProps) {
+
+  const plans: IPlan[] = useSelector((state: IRootState) => state.plans.list);
+
   return (
     <div>
-      PlansList
+      {
+        plans && plans.map(plan => <div key={plan.planId}>{plan.title}</div>)
+      }
     </div>
   );
 }

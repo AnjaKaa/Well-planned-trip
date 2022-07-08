@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { hot } from "react-hot-loader";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
 import { HomePage, PlanTripPage, ReportTripPage, EditPlanTripPage, EditReportTripPage, PlansList, TripsList } from "./pages";
 import Layout from './components/Layout';
 
-const App = () => {
+import { database } from './../firebase';
+import { useDispatch } from "react-redux";
+import { getPlans } from "./store/slices/plansSlice";
 
+const App = () => {
+  console.log(database);
+  const dispatch = useDispatch();
+  useEffect(
+    () => {
+      dispatch(getPlans());
+    }, []
+  )
   return (
     <Layout>
       <Switch>

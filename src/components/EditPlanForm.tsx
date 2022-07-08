@@ -1,19 +1,20 @@
-import * as React from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { TextField, Typography, Button, Box } from '@mui/material';
 import { useFormik, FormikProvider, FieldArray } from 'formik';
 import * as yup from 'yup';
 import uuid from 'react-uuid';
-import { IntentField, IIntent } from './IntentField';
+import { IntentField } from './IntentField';
+import { createPlan } from "../store/slices/plansSlice";
+import { IPlan } from '../types/planTypes';
+
 
 export interface IEditPlanFormProps {
   planId?: number;
 }
 
-interface IPlanFormValues {
-  title: string;
-  description?: string,
-  amountOfDays: number,
-  intents: IIntent[];
+interface IPlanFormValues extends IPlan {
+
 }
 
 const validationSchema = yup.object({
@@ -39,8 +40,9 @@ const validationSchema = yup.object({
 });
 
 export const EditPlanForm: React.FC<IEditPlanFormProps> = ({ planId = null }) => {
-
+  const dispatch = useDispatch();
   const initialValues: IPlanFormValues = {
+    planId: null,
     title: '',
     description: '',
     amountOfDays: 1,
@@ -56,9 +58,8 @@ export const EditPlanForm: React.FC<IEditPlanFormProps> = ({ planId = null }) =>
   const handleSubmit = (e) => {
     e.preventDefault();
     alert(JSON.stringify(formik.values, null, 2));
+    dispatch(createPlan(formik.values));
   }
-
-  console.log(formik.values)
 
   return (
     <>

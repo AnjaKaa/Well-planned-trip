@@ -6,10 +6,13 @@ import {
 } from 'connected-react-router';
 import userReducer, { IUserState } from "./slices/userSlice";
 import { createBrowserHistory, History } from 'history';
+import { IPlan } from './../types/planTypes';
+import plansReducer, { IPlanState } from "./slices/plansSlice";
 
 export interface IRootState {
   router: RouterState,
-  user: IUserState
+  user: IUserState,
+  plans: IPlanState
 }
 
 export const history: History<any> = createBrowserHistory();
@@ -19,6 +22,7 @@ export const store = configureStore({
   reducer: {
     router: connectRouter(history),
     user: userReducer,
+    plans: plansReducer
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(routerMiddleware(history)),
   preloadedState

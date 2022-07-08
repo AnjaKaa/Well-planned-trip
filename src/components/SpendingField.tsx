@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { Stack, TextField, Box, Fab } from '@mui/material';
-export interface ISpending {
-  title: string,
-  cost?: number,
-  currency?: string
-}
+import { ISpending } from '../types/planTypes';
 
 export interface ISpendingFieldProps {
   spending: ISpending;

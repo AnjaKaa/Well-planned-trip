@@ -1,14 +1,9 @@
 import * as React from 'react';
 import { Box, Button, TextField } from '@mui/material';
-import { SpendingField, ISpending } from "./SpendingField";
+import { SpendingField } from "./SpendingField";
+import { IIntent, ISpending } from './../types/planTypes';
 
-export interface IIntent {
-  id: string;
-  title: string;
-  address?: string;
-  description?: string;
-  spendings?: ISpending[]
-}
+
 
 interface IIntentFieldProps {
   intent: IIntent,
