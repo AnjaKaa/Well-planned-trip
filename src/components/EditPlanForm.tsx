@@ -5,17 +5,16 @@ import { useFormik, FormikProvider, FieldArray } from 'formik';
 import * as yup from 'yup';
 import uuid from 'react-uuid';
 import { IntentField } from './IntentField';
-import { createPlan } from "../store/slices/plansSlice";
+import { createPlan, savePlan } from "../store/slices/plansSlice";
 import { IPlan } from '../types/planTypes';
+import { useHistory } from 'react-router-dom';
 
 
 export interface IEditPlanFormProps {
-  planId?: number;
+  plan?: IPlan;
 }
 
-interface IPlanFormValues extends IPlan {
-
-}
+interface IPlanFormValues extends IPlan { }
 
 const validationSchema = yup.object({
   title: yup
@@ -39,14 +38,18 @@ const validationSchema = yup.object({
 
 });
 
-export const EditPlanForm: React.FC<IEditPlanFormProps> = ({ planId = null }) => {
+export const EditPlanForm: React.FC<IEditPlanFormProps> = ({ plan = null }) => {
   const dispatch = useDispatch();
+  const { push } = useHistory();
   const initialValues: IPlanFormValues = {
     planId: null,
     title: '',
     description: '',
     amountOfDays: 1,
-    intents: []
+    intents: [],
+    dateCreate: null,
+    dateUpdate: null,
+    ...plan
   };
 
   const formik = useFormik({
@@ -57,14 +60,24 @@ export const EditPlanForm: React.FC<IEditPlanFormProps> = ({ planId = null }) =>
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(JSON.stringify(formik.values, null, 2));
-    dispatch(createPlan(formik.values));
+    const save = plan ? savePlan : createPlan;
+    alert(JSON.stringify({
+      ...formik.values,
+      dateCreate: plan?.dateCreate || new Date().getTime(),
+      dateUpdate: new Date().getTime()
+    }, null, 2));
+    dispatch(save({
+      ...formik.values,
+      dateCreate: plan?.dateCreate || new Date().getTime(),
+      dateUpdate: new Date().getTime()
+    }));
+    push('/plans')
   }
 
   return (
     <>
       <Typography variant="h5" component="div">
-        {planId ? 'Edit' : 'Create'} plan
+        {plan?.planId ? 'Edit' : 'Create'} plan
       </Typography>
       <FormikProvider value={formik}>
         <form onSubmit={handleSubmit}>
@@ -112,7 +125,7 @@ export const EditPlanForm: React.FC<IEditPlanFormProps> = ({ planId = null }) =>
             <FieldArray name="intents">
               {({ insert, remove, push }) => (
                 <div>
-                  {formik.values.intents.length > 0 ?
+                  {formik.values.intents?.length > 0 ?
                     formik.values.intents?.map(
                       (intent, idx) => (
                         <IntentField
@@ -121,11 +134,10 @@ export const EditPlanForm: React.FC<IEditPlanFormProps> = ({ planId = null }) =>
                           onChange={
                             (e) => {
                               const newIntents = [...formik.values.intents];
-                              newIntents[idx][e.target.name] = e.target.value;
+                              newIntents[idx] = { ...newIntents[idx], [e.target.name]: e.target.value };
                               formik.setFieldValue(
                                 'intents', newIntents
                               );
-
                             }
                           }
                           remove={() => remove(idx)} />)

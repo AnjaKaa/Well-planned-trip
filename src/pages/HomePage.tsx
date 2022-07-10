@@ -1,13 +1,13 @@
-import * as React from 'react';
+import React, { FC } from 'react';;
 import { Typography, Fab } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { CardPlan } from '../components/CardPlan'
+
 
 export interface IHomePageProps {
 }
 
-export function HomePage(props: IHomePageProps) {
+export const HomePage: FC<IHomePageProps> = (props) => {
   return (
     <>
       <Box component="div" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -28,7 +28,7 @@ export function HomePage(props: IHomePageProps) {
           </Fab>
         </Link>
       </Box>
-      <CardPlan title='Title' date="25.06.2022" />
+
     </>
   );
 }

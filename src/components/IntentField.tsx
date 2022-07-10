@@ -13,7 +13,8 @@ interface IIntentFieldProps {
 }
 
 export const IntentField: React.FC<IIntentFieldProps> = ({ intent, onChange, remove }) => {
-  const [spendings, setSpendings] = React.useState<ISpending[]>([]);
+  const [spendings, setSpendings] = React.useState<ISpending[]>(intent.spendings || []);
+
 
   React.useEffect(() => {
     onChange({ target: { name: 'spendings', value: spendings } });
@@ -57,7 +58,7 @@ export const IntentField: React.FC<IIntentFieldProps> = ({ intent, onChange, rem
 
     <Box>
       {intent?.spendings?.length > 0 &&
-        intent.spendings?.map(
+        intent?.spendings?.map(
           (spending, idx) => (
             <SpendingField
               key={idx}
@@ -70,7 +71,7 @@ export const IntentField: React.FC<IIntentFieldProps> = ({ intent, onChange, rem
                   };
                   const newSpendigs = [...spendings];
                   newSpendigs[idx] = newValue;
-                  setSpendings(newSpendigs)
+                  setSpendings(newSpendigs);
                 }
               }
               remove={() => {

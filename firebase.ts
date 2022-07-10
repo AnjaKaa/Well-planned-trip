@@ -3,7 +3,7 @@ import { getAuth, updateProfile, updatePassword, signInWithEmailAndPassword, cre
 import { getDownloadURL, getStorage, ref, deleteObject, uploadBytes } from "firebase/storage";
 import uuid from 'react-uuid';
 import env from "react-dotenv";
-import { getDatabase, ref as refDB, set, get, child } from "firebase/database";
+import { getDatabase, ref as refDB, set, get, child, update } from "firebase/database";
 import { IPlan } from './src/types/planTypes'
 
 
@@ -31,9 +31,23 @@ function read({ path }) {
   return get(child(refDB(database), path)).then((snapshot) => snapshot.val());
 }
 
+function updateData(updates) {
+  return update(refDB(database), updates);
+}
+
 
 export function writePlanData(plan: IPlan) {
-  return write({ path: 'plans/' + uuid(), data: plan })
+  return write({ path: 'plans/' + uuid(), data: plan });
+}
+
+export function updatePlanData(plan: IPlan) {
+  return updateData({ ['plans/' + plan.planId]: plan });
+}
+
+function objectToArray(obj) {
+  return Object.keys(obj)?.map(
+    key => obj[key]
+  )
 }
 
 export function readAllPlans() {
@@ -42,7 +56,11 @@ export function readAllPlans() {
       Object.keys(res).map(
         planId => {
           const plan = res[planId];
-          return { ...plan, planId }
+          const intents = plan?.intents ? objectToArray(plan.intents) : [];
+
+          intents.forEach(intent =>
+            intent.spendings = intent?.spendings ? objectToArray(intent.spendings) : [])
+          return { ...plan, planId, intents };
         }
       )
     );

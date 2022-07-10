@@ -10,10 +10,10 @@ export interface IPlan {
   title: string,
   description: string,
   amountOfDays: number,
-  intents: IIntent[]
+  intents: IIntent[],
+  dateCreate: number,
+  dateUpdate: number
 }
-
-
 export interface ISpending {
   title: string,
   cost?: number,

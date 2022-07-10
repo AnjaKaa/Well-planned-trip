@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { hot } from "react-hot-loader";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
-import { HomePage, PlanTripPage, ReportTripPage, EditPlanTripPage, EditReportTripPage, PlansList, TripsList } from "./pages";
+import { HomePage, PlanTripPage, ReportTripPage, EditPlanTripPage, EditReportTripPage, PlansListPage, TripsList } from "./pages";
 import Layout from './components/Layout';
 
 import { database } from './../firebase';
@@ -21,7 +21,7 @@ const App = () => {
     <Layout>
       <Switch>
         <Route exact path="/" component={HomePage} />
-        <Route exact path="/plans" component={PlansList} />
+        <Route exact path="/plans" component={PlansListPage} />
         <Route exact path="/plan/create" component={EditPlanTripPage} />
         <Route exact path="/plan/edit/:id" component={EditPlanTripPage} />
         <Route exact path="/plan/:id" component={PlanTripPage} />
