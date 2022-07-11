@@ -4,7 +4,8 @@ import { getDownloadURL, getStorage, ref, deleteObject, uploadBytes } from "fire
 import uuid from 'react-uuid';
 import env from "react-dotenv";
 import { getDatabase, ref as refDB, set, get, child, update } from "firebase/database";
-import { IPlan } from './src/types/planTypes'
+import { IIntent, IPlan, ISpending } from './src/types/planTypes'
+import { objectToArray } from "./src/helpers";
 
 
 
@@ -44,22 +45,16 @@ export function updatePlanData(plan: IPlan) {
   return updateData({ ['plans/' + plan.planId]: plan });
 }
 
-function objectToArray(obj) {
-  return Object.keys(obj)?.map(
-    key => obj[key]
-  )
-}
-
 export function readAllPlans() {
   return read({ path: 'plans/' })
-    .then(res =>
+    .then((res) =>
       Object.keys(res).map(
-        planId => {
+        (planId: string) => {
           const plan = res[planId];
-          const intents = plan?.intents ? objectToArray(plan.intents) : [];
+          const intentsData = plan?.intents ? objectToArray(plan.intents) : [];
 
-          intents.forEach(intent =>
-            intent.spendings = intent?.spendings ? objectToArray(intent.spendings) : [])
+          const intents = intentsData.map((intent: any) =>
+            intent?.spendings ? objectToArray(intent.spendings) : [])
           return { ...plan, planId, intents };
         }
       )

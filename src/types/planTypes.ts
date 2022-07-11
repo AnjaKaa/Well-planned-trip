@@ -19,4 +19,3 @@ export interface ISpending {
   cost?: number,
   currency?: string
 }
-

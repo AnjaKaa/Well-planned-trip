@@ -1,6 +1,7 @@
 {
   "include": [
     "src/*",
+    "firebase.ts",
   ],
   "exclude": [
     "node_modules",
